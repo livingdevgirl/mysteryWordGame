@@ -60,11 +60,11 @@ app.get('/', function(req, res) {
 
   for (var i = 0; i < newWordSplit.length; i++) {
     //placeholder
-    newWords.push(newWordSplit);
-    console.log(newWords)
-    wordInstance.push(' _ ');
+    wordInstance.push('_');
     stringWord = (wordInstance.toString()).split(",").join(" ");
-    console.log(stringWord)
+
+    console.log(newWordSplit)
+    console.log(wordInstance)
   }
   return res.render('home', {
     stringWord: stringWord,
@@ -74,8 +74,27 @@ app.get('/', function(req, res) {
 });
 
 app.get('/lose', function(req,res){
+
+  wordInstance = [];
+  alreadyGuessed = [];
+  newWords = [];
+  turns = 8;
+  newWord
+
   console.log("lose")
-  return res.render('lose', {wordInstance: wordInstance})
+  return res.render('lose')
+})
+
+app.get('/win', function(req,res){
+
+  wordInstance = [];
+  alreadyGuessed = [];
+  newWords = [];
+  turns = 8;
+  newWord
+
+  console.log("win")
+  return res.render('win')
 })
 
 app.post('/', function(req, res) {
@@ -101,6 +120,12 @@ app.post('/', function(req, res) {
     if (!newWordSplit.includes(userGuess)) {
       turns = (turns - 1);
       if (turns === 0){
+        wordInstance = [];
+        alreadyGuessed = [];
+        newWords = [];
+        turns = 8;
+        newWord
+
         return res.redirect('lose')
       }
     };
@@ -110,23 +135,20 @@ app.post('/', function(req, res) {
           wordInstance.splice(i, 1, userGuess);
           stringWord = (wordInstance.toString()).split(",").join(" ");
 
+          console.log(newWordSplit)
+          console.log(wordInstance)
+          if (wordInstance === newWordSplit){
+
+            return res.redirect('win')
+          }
         };
 
 
   };
-
-
-  // if (turns === 0){
-  //   let stringWord = "Fail"
-  // }
-
-
-
-
       console.log(stringWord);
     }
   };
-  res.render('home', {
+  return res.render('home', {
     turns: turns,
     stringWord: stringWord,
     alreadyGuessed: alreadyGuessed,

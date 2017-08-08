@@ -15,14 +15,15 @@
       {{.}}
     {{/errors}}
     {{userGuess}}
-
+turns: {{turns}}
 
 <form name="userGuesses" method="post">
   <input type="text" name="userGuess" value=""/>
   <input type="submit" name="submit" value="submit"/>
 </form>
-<div id="wordToGuess">{{alreadyGuessed}}
-<h3>{{stringWord}}</h3></div>
 
+<div id="wordToGuess"><h3>{{stringWord}}</h3></div>
+
+<div id="alreadyGuessed">already guessed:{{#alreadyGuessed}}{{.}}{{/alreadyGuessed}} </div>
   </body>
 </html>

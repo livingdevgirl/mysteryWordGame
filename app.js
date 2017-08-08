@@ -45,6 +45,10 @@ let wordInstance = [];
 
 let newWords = [];
 
+let alreadyGuessed = [];
+
+let turns = 8;
+
 //fixed the commas added to the array by making it a string, splitting and joining
 let stringWord = (wordInstance.toString()).split(",").join(" ");
 console.log(newWordSplit)
@@ -59,7 +63,8 @@ app.get('/', function(req, res){
     console.log(stringWord)
   }
    return res.render('home', {stringWord: stringWord,
-  wordInstance: wordInstance})
+  wordInstance: wordInstance,
+turns: turns})
 });
 
 app.post('/', function(req, res){
@@ -79,21 +84,25 @@ app.post('/', function(req, res){
   // };
 
 
-  let alreadyGuessed = []
+
+  if (!alreadyGuessed.includes(userGuess)) {
+  alreadyGuessed.push(userGuess);
+};
 
     if (newWordSplit.includes(userGuess)){
             for (var i = 0; i < newWordSplit.length; i++) {
-      if (!alreadyGuessed.includes(userGuess)) {
-      alreadyGuessed.push(userGuess)};
-
         if (newWordSplit[i] === userGuess){
                 wordInstance.splice(i, 1, userGuess);
                 stringWord = (wordInstance.toString()).split(",").join(" ");
+        } else{
+          turns = -1;
         }
+
         console.log(stringWord);
       }
   };
       res.render('home', {
+        turns: turns,
         stringWord: stringWord,
         alreadyGuessed: alreadyGuessed,
         wordInstance: wordInstance

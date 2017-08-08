@@ -30,7 +30,9 @@ app.use(
 app.use(morgan('dev'));
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(expressValidator());
 
 app.use(express.static('public'));
@@ -52,30 +54,39 @@ let turns = 8;
 //fixed the commas added to the array by making it a string, splitting and joining
 let stringWord = (wordInstance.toString()).split(",").join(" ");
 console.log(newWordSplit)
-app.get('/', function(req, res){
+
+
+app.get('/', function(req, res) {
 
   for (var i = 0; i < newWordSplit.length; i++) {
     //placeholder
     newWords.push(newWordSplit);
     console.log(newWords)
-    wordInstance.push( ' _ ' );
+    wordInstance.push(' _ ');
     stringWord = (wordInstance.toString()).split(",").join(" ");
     console.log(stringWord)
   }
-   return res.render('home', {stringWord: stringWord,
-  wordInstance: wordInstance,
-turns: turns})
+  return res.render('home', {
+    stringWord: stringWord,
+    wordInstance: wordInstance,
+    turns: turns
+  })
 });
 
-app.post('/', function(req, res){
-    let userGuess = req.body.userGuess.toUpperCase()
+app.get('/lose', function(req,res){
+  console.log("lose")
+  return res.render('lose', {wordInstance: wordInstance})
+})
+
+app.post('/', function(req, res) {
+  let userGuess = req.body.userGuess.toUpperCase()
   //
   req.checkBody('userGuess', 'guess a letter!').notEmpty();
   let errors = req.getValidationResult();
   console.log(errors);
 
 
-// hanlde errors
+  // hanlde errors
   // if (errors) {
   //   return res.send(errors)
   //   } else {
@@ -86,27 +97,41 @@ app.post('/', function(req, res){
 
 
   if (!alreadyGuessed.includes(userGuess)) {
-  alreadyGuessed.push(userGuess);
-};
-
-    if (newWordSplit.includes(userGuess)){
-            for (var i = 0; i < newWordSplit.length; i++) {
-        if (newWordSplit[i] === userGuess){
-                wordInstance.splice(i, 1, userGuess);
-                stringWord = (wordInstance.toString()).split(",").join(" ");
-        } else{
-          turns = -1;
-        }
-
-        console.log(stringWord);
+    alreadyGuessed.push(" "+ userGuess + ",");
+    if (!newWordSplit.includes(userGuess)) {
+      turns = (turns - 1);
+      if (turns === 0){
+        return res.redirect('lose')
       }
+    };
+    if (newWordSplit.includes(userGuess)) {
+      for (var i = 0; i < newWordSplit.length; i++) {
+        if (newWordSplit[i] === userGuess) {
+          wordInstance.splice(i, 1, userGuess);
+          stringWord = (wordInstance.toString()).split(",").join(" ");
+
+        };
+
+
   };
-      res.render('home', {
-        turns: turns,
-        stringWord: stringWord,
-        alreadyGuessed: alreadyGuessed,
-        wordInstance: wordInstance
-    });
+
+
+  // if (turns === 0){
+  //   let stringWord = "Fail"
+  // }
+
+
+
+
+      console.log(stringWord);
+    }
+  };
+  res.render('home', {
+    turns: turns,
+    stringWord: stringWord,
+    alreadyGuessed: alreadyGuessed,
+    wordInstance: wordInstance
+  });
 
 });
 
